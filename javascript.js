@@ -20,7 +20,7 @@ allLinks.forEach(link => {
 
     if (!targetTab || id === activeTab) return;
 
-    // Ripple Effect
+    // Ripple Effect with Neon Color
     const ripple = document.createElement('div');
     ripple.classList.add('ripple');
     ripple.style.left = `${e.clientX - 50}px`;
@@ -29,52 +29,54 @@ allLinks.forEach(link => {
 
     ripple.addEventListener('animationend', () => ripple.remove());
 
-    // Scroll while ripple plays
+    // Navigation Logic
     zIndex++;
     targetTab.style.zIndex = zIndex;
-    window.scrollTo({
-      top: targetTab.offsetTop,
-      behavior: 'smooth'
+    
+    // Highlight active header link
+    document.querySelectorAll('header nav a').forEach(nav => nav.classList.remove('active'));
+    // Try to find the nav link that corresponds to this click
+    const correspondingNav = document.querySelector(`header nav a[data-tab="${tabKey}"]`);
+    if(correspondingNav) correspondingNav.classList.add('active');
+
+    targetTab.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
     });
 
     activeTab = id;
   });
 });
 
-
 window.addEventListener('DOMContentLoaded', () => {
-  particlesJS('particles-js', {
-    particles: {
-      number: {
-        value: 50,
-        density: {
+  if (typeof particlesJS !== 'undefined') {
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#00f3ff' }, // Cyan particles
+        shape: { type: 'circle' },
+        opacity: { value: 0.5 },
+        size: { value: 3 },
+        line_linked: {
           enable: true,
-          value_area: 800
+          distance: 150,
+          color: '#00f3ff',
+          opacity: 0.2,
+          width: 1
+        },
+        move: { enable: true, speed: 3 }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: 'grab' },
+          onclick: { enable: true, mode: 'push' },
+          resize: true
+        },
+        modes: {
+          grab: { distance: 180, line_linked: { opacity: 0.8 } }
         }
       },
-      color: { value: '#ffffff' },
-      shape: { type: 'circle' },
-      opacity: { value: 0.3 },
-      size: { value: 3 },
-      line_linked: {
-        enable: true,
-        distance: 150,
-        color: '#ffffff',
-        opacity: 0.2,
-        width: 1
-      },
-      move: {
-        enable: true,
-        speed: 2
-      }
-    },
-    interactivity: {
-      events: {
-        onhover: { enable: true, mode: 'grab' },
-        onclick: { enable: false },
-        resize: true
-      }
-    },
-    retina_detect: true
-  });
+      retina_detect: true
+    });
+  }
 });
